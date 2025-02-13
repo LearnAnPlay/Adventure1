@@ -10,12 +10,16 @@
             text-align: center;
             background-color: #eef;
         }
-        .hidden { display: none; }
+        .hidden {
+            display: none;
+        }
         .stage {
             border: 2px solid #333;
             padding: 20px;
-            margin: 20px;
+            margin: 20px auto;
             background: white;
+            width: 60%;
+            max-width: 600px;
         }
         .btn {
             padding: 10px 20px;
@@ -25,22 +29,24 @@
             border: none;
             cursor: pointer;
         }
-        .btn:hover { background: #45a049; }
+        .btn:hover {
+            background: #45a049;
+        }
     </style>
 </head>
 <body>
+
     <h1>Invertebrate Clade Digital Adventure</h1>
     <p>Enter your name to begin your adventure:</p>
     <input type="text" id="playerName" placeholder="Your Name Here">
     <br><br>
-    <p>Click below to start your journey!</p>
-    <button class="btn" onclick="startAdventure()">Begin</button>
+    <button class="btn" id="startButton" onclick="startAdventure()">Begin</button>
 
-    <!-- Stage 1 -->
+    <!-- STAGE 1: Identifying Clades -->
     <div id="stage1" class="stage hidden">
         <h2>Stage 1: Identifying Clades</h2>
         <p>You stumble upon a tide pool. Strange creatures cling to the rocks, drift in the water, and burrow in the sand. Identify their clades to continue.</p>
-        <p>Match the following creatures to their correct clade:</p>
+
         <div>
             <label>Jellyfish:</label>
             <select id="jellyfish">
@@ -50,6 +56,7 @@
                 <option value="arthropod">Arthropod</option>
             </select>
         </div>
+
         <div>
             <label>Crab:</label>
             <select id="crab">
@@ -59,6 +66,7 @@
                 <option value="echinoderm">Echinoderm</option>
             </select>
         </div>
+
         <div>
             <label>Earthworm:</label>
             <select id="earthworm">
@@ -68,86 +76,135 @@
                 <option value="arthropod">Arthropod</option>
             </select>
         </div>
-        <button class="btn" onclick="nextStage('stage1', 'lureMystery')">Continue</button>
+
+        <button class="btn" onclick="checkClades()">Continue</button>
     </div>
 
-    <!-- Stage 2: Mystery Organism Encounter -->
+    <!-- STAGE 2: Mystery Organism Encounter -->
     <div id="lureMystery" class="stage hidden">
         <h2>Mystery Organism Encounter</h2>
-        <p>You see an unusual creature floating in the water. It has soft, tentacle-like appendages that wave in the currents, and it emits a faint glow. When a small fish swims nearby, the tentacles twitch—then suddenly, a massive predator bursts from beneath the sand, swallowing both the fish and the lure-like creature in an instant.</p>
+        <p>You see an unusual creature floating in the water. It has soft, tentacle-like appendages that wave in the currents, and it emits a faint glow.</p>
+        
         <img src="https://i.imgur.com/ein8fdE.jpeg" alt="Mysterious Lure" width="500px">
-        <p>Describe what you see: Be sure to describe the type of symmetry (bilateral, radial, or asymmetrical) and if it looks like it has a single opening functioning as both mouth and anus, or two separate openings for digestion. Your response will be saved for later.</p>
+        
+        <p>Describe what you see:</p>
         <textarea id="description" rows="3" cols="40"></textarea>
         <br>
-        <button class="btn" onclick="tryToCatch()">Try to Catch It</button>
-        <div id="jumpScare" class="hidden">
-            <p style="color:red; font-weight:bold; font-size:20px;">A massive predator bursts from the sand! It's a trap!</p>
-            <img src="https://i.imgur.com/mdSuayP.jpeg" alt="Jump Scare Image" width="500px">
-        </div>
-        <p>Is the glowing creature an invertebrate or a lure?</p>
-        <select id="mysteryCreature">
-            <option value="">Select...</option>
-            <option value="invertebrate">A real invertebrate</option>
-            <option value="lure">Just a lure for a predatory vertebrate</option>
-        </select>
-        <button class="btn disabled" id="lureContinue" onclick="saveDescription()" disabled>Continue</button>
+        <button class="btn" onclick="triggerJumpScare()">Continue</button>
     </div>
 
-    <!-- Success Screen -->
-    <div id="successScreen" class="stage hidden">
-        <h2>Success!</h2>
-        <p>You successfully identified the lure and survived the encounter.</p>
-        <p>Adventurer: <span id="savedName"></span></p>
-        <p>Your description of the mystery organism:</p>
-        <p id="savedDescription"></p>
-        <p>Take a screenshot of this page and email it to your teacher at: **EWOLFSON@ISD318.ORG**</p>
-        <button class="btn" onclick="nextStage('successScreen', 'stage2')">Proceed to Stage 2</button>
-    </div>
-
+    <!-- STAGE 3: Jump Scare & Classification -->
     <div id="stage2" class="stage hidden">
-        <h2>Stage 2: Escape the Deep-Sea Labyrinth</h2>
-        <p>Your submarine loses power! Identify the bioluminescent creatures to navigate through the deep-sea maze.</p>
-        <button class="btn" onclick="nextStage('stage2', 'stage3')">Continue</button>
+        <h2>Sudden Attack!</h2>
+        <p>As you observe the creature, the sand explodes and a monstrous predator lunges at you!</p>
+        
+        <img id="jumpScareImage" src="https://i.imgur.com/mdSuayP.jpeg" alt="Jump Scare" width="500px">
+
+        <p>The massive predator disappears back into the sand. You must classify the mysterious creature before moving forward.</p>
+
+        <label>Classify the creature:</label>
+        <select id="classification">
+            <option value="">Select...</option>
+            <option value="invertebrate">Invertebrate</option>
+            <option value="vertebrate">Vertebrate</option>
+            <option value="lure">Lure used by predator</option>
+        </select>
+        <br>
+        <button class="btn" onclick="checkClassification()">Submit</button>
     </div>
 
+    <!-- STAGE 4: LAB SCENE -->
+    <div id="labScene" class="stage hidden">
+        <h2>Welcome to the Laboratory</h2>
+        <p>You wake up in a high-tech research facility. Scientists need your help classifying invertebrates!</p>
+        
+        <img src="https://i.imgur.com/eLvrZpz.jpeg" alt="Laboratory" width="500px">
+
+        <p>Click "Begin Analysis" to classify invertebrate specimens.</p>
+        <button class="btn" onclick="startClassification()">Begin Analysis</button>
+    </div>
+
+    <!-- STAGE 5: CLASSIFICATION GAME -->
+    <div id="classificationGame" class="stage hidden">
+        <h2>Specimen Analysis</h2>
+        <p>Identify the invertebrate clade for the following specimen:</p>
+        <img id="specimenImage" src="" alt="Specimen Image" width="400px">
+        <br>
+
+        <label>Select the correct clade:</label>
+        <select id="cladeSelection">
+            <option value="">Select...</option>
+            <option value="cnidarian">Cnidarian</option>
+            <option value="annelid">Annelid</option>
+            <option value="arthropod">Arthropod</option>
+            <option value="mollusk">Mollusk</option>
+            <option value="echinoderm">Echinoderm</option>
+        </select>
+        <br>
+        <button class="btn" onclick="checkCladeAnswer()">Submit</button>
+    </div>
+
+    <!-- FIXED SCRIPT -->
     <script>
+        let specimens = [
+            { image: "https://i.imgur.com/1A1rA.jpeg", clade: "annelid" },
+            { image: "https://i.imgur.com/nIFBNEH.jpeg", clade: "arthropod" },
+            { image: "https://i.imgur.com/roiFGza.jpeg", clade: "mollusk" },
+            { image: "https://i.imgur.com/ToSPlHE.jpeg", clade: "echinoderm" }
+        ];
+        
+        let currentSpecimenIndex = 0;
+
         function startAdventure() {
-            let playerName = document.getElementById("playerName").value;
-            localStorage.setItem("playerName", playerName);
-            document.getElementById("stage1").classList.remove("hidden");
+            document.getElementById("playerName").style.display = "none";
+            document.getElementById("startButton").style.display = "none"; 
+            nextStage("startButton", "stage1");
+        }
+
+        function checkClades() {
+            nextStage("stage1", "lureMystery");
+        }
+
+        function triggerJumpScare() {
+            nextStage("lureMystery", "stage2");
+        }
+
+        function checkClassification() {
+            nextStage("stage2", "labScene");
+        }
+
+        function startClassification() {
+            console.log("Begin Analysis Clicked: Transitioning to Classification Game...");
+            currentSpecimenIndex = 0;
+            nextStage("labScene", "classificationGame");
+            setTimeout(showSpecimen, 500);
+        }
+
+        function showSpecimen() {
+            if (currentSpecimenIndex < specimens.length) {
+                document.getElementById("specimenImage").src = specimens[currentSpecimenIndex].image;
+            } else {
+                alert("All specimens classified correctly! Experiment complete.");
+            }
+        }
+
+        function checkCladeAnswer() {
+            let selectedClade = document.getElementById("cladeSelection").value;
+            let correctClade = specimens[currentSpecimenIndex].clade;
+
+            if (selectedClade === correctClade) {
+                currentSpecimenIndex++;
+                showSpecimen();
+            } else {
+                alert("Incorrect! Try again.");
+            }
         }
 
         function nextStage(current, next) {
             document.getElementById(current).classList.add("hidden");
             document.getElementById(next).classList.remove("hidden");
         }
-
-        function tryToCatch() {
-            document.getElementById("jumpScare").classList.remove("hidden");
-        }
-
-        function saveDescription() {
-            let playerName = localStorage.getItem("playerName");
-            document.getElementById("savedName").innerText = playerName;
-            let description = document.getElementById("description").value;
-            document.getElementById("savedDescription").innerText = description;
-            nextStage('lureMystery', 'successScreen');
-        }
-
-        function checkLureSelection() {
-            let selection = document.getElementById("mysteryCreature").value;
-            let continueButton = document.getElementById("lureContinue");
-            
-            if (selection === "lure") {
-                continueButton.classList.remove("disabled");
-                continueButton.disabled = false;
-            } else {
-                continueButton.classList.add("disabled");
-                continueButton.disabled = true;
-            }
-        }
-        
-        document.getElementById("mysteryCreature").addEventListener("change", checkLureSelection);
     </script>
+
 </body>
 </html>
